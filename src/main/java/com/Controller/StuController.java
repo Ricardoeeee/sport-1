@@ -1,5 +1,7 @@
 package com.Controller;
 
+import com.Entity.s_sport;
+import com.Entity.s_sport_dto;
 import com.Entity.s_stu;
 import com.Service.StuService;
 import org.springframework.boot.autoconfigure.batch.BatchProperties;
@@ -15,7 +17,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/stu")
-@CrossOrigin(allowCredentials = "true",origins = {"http://localhost:8080","http://10.152.195.206:8080","http://192.168.157.15:8080"})
+//@CrossOrigin(allowCredentials = "true",origins = {"http://localhost:8080","http://10.152.195.206:8080","http://192.168.157.15:8080"})
 public class StuController {
     @Resource
     private StuService stuService;
@@ -46,5 +48,10 @@ public class StuController {
     @GetMapping("/sportlist")
     public List<s_stu> sportlist(){
        return stuService.selectAll();
+    }
+
+    @GetMapping("/recommend")
+    public List<s_sport_dto> recommend(String father){
+        return stuService.recommend(father);
     }
 }

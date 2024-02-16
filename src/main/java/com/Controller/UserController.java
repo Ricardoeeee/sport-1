@@ -9,7 +9,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
 //允许跨域 allowCredentials、origins必须填
-@CrossOrigin(allowCredentials = "true",origins = {"http://localhost:8080","http://localhost:*"})
+//@CrossOrigin(allowCredentials = "true",origins = {"http://localhost:8080","http://localhost:*"})
 @RestController
 @RequestMapping("/user")
 public class UserController {

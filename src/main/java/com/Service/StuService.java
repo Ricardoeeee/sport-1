@@ -1,21 +1,29 @@
 package com.Service;
 
+import cn.hutool.core.bean.BeanUtil;
+import com.Dao.SportDao;
 import com.Dao.StuDao;
+import com.Dao.StuSportDao;
+import com.Entity.s_sport;
+import com.Entity.s_sport_dto;
 import com.Entity.s_stu;
+import com.Entity.s_stu_sport;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 
 public class StuService {
     @Resource
     private StuDao stuDao;
+    @Resource
+    private SportDao sportDao;
+    @Resource
+    private StuSportDao stuSportDao;
 
     public List<s_stu> SelectByType(String type) {
         s_stu stu = new s_stu();
@@ -90,4 +98,22 @@ public class StuService {
         return stuDao.selectList(queryWrapper);
     }
 
+    public List<s_sport_dto> recommend(String father) {
+
+        QueryWrapper<s_sport> queryWrapper =new QueryWrapper<>();
+        QueryWrapper<s_sport> father1 = queryWrapper.eq("father", father);
+        List<s_sport> list = sportDao.selectList(father1);
+        List<s_sport_dto> list1 = new ArrayList<>(5);
+        for (s_sport sport : list) {
+            s_sport_dto SportDto = BeanUtil.copyProperties(sport, s_sport_dto.class);
+            QueryWrapper<s_stu_sport> queryWrapper1 =new QueryWrapper<>();
+            queryWrapper1 = queryWrapper1.eq("like_sport_id", sport.getId());
+            int count = stuSportDao.selectList(queryWrapper1).size();
+            SportDto.setLikes(count);
+            list1.add(SportDto);
+        }
+        return list1.stream()
+                .sorted((s_sport_dto o1, s_sport_dto o2) -> o2.getLikes() - o1.getLikes())
+                .collect(Collectors.toList());
+    }
 }

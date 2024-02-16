@@ -1,6 +1,7 @@
 package com.Config;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 
 import javax.servlet.*;
@@ -13,6 +14,7 @@ import java.io.IOException;
 @Slf4j
 @Order(1) //表示如果有多个拦截器的话就是设置这个拦截器的运行等级，数字越小，越先执行。
 @WebFilter(filterName = "MyFilter")
+@Configuration
 public class MyFilter implements Filter {
     public void init(FilterConfig config) throws ServletException {
         System.out.println("过滤器初始化");
